@@ -2,36 +2,39 @@
 #include <stdlib.h>
 
 int main(int argc, char *argv[]) {
-    FILE *source, *target;
-    char ch;
+    // Check if the correct number of arguments are passed
+    if(argc != 3) {
+        printf("Usage: %s <source> <target>\n", argv[0]);
+        return 1; // Return non-zero for error code
+    }
 
-    if (argc != 3) {
-        printf("Usage: ./filecopy <source> <target>\n");
+    // Open the source file for reading
+    FILE *src = fopen(argv[1], "r");
+    if(src == NULL) {
+        perror("Error opening source file");
         return 1;
     }
 
-    source = fopen(argv[1], "r");
-    if (source == NULL) {
-        printf("Cannot open source file.\n");
+    // Open the target file for writing
+    FILE *dest = fopen(argv[2], "w");
+    if(dest == NULL) {
+        perror("Error opening target file");
+        fclose(src); // Close the source file before exiting
         return 1;
     }
 
-    target = fopen(argv[2], "w");
-    if (target == NULL) {
-        fclose(source);
-        printf("Cannot open target file.\n");
-        return 1;
+    // Copy contents from source to target
+    char buffer[1024]; // A buffer to hold file contents temporarily
+    size_t bytesRead;
+    while((bytesRead = fread(buffer, 1, sizeof(buffer), src)) > 0) {
+        fwrite(buffer, 1, bytesRead, dest);
     }
 
-    while ((ch = fgetc(source)) != EOF) {
-        fputc(ch, target);
-    }
+    // Close the opened files
+    fclose(src);
+    fclose(dest);
 
-    printf("File copied successfully.\n");
+    printf("File copy was successful.\n");
 
-    fclose(source);
-    fclose(target);
-
-    return 0;
+    return 0; // Return zero to indicate success
 }
-
