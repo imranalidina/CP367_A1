@@ -3,22 +3,22 @@
 
 int main(int argc, char *argv[]) {
     // Check if the correct number of arguments are passed
-    if(argc != 3) {
-        printf("Usage: %s <source> <target>\n", argv[0]);
+    if (argc != 3) {
+        printf("Insufficient parameters passed.\n");
         return 1; // Return non-zero for error code
     }
 
     // Open the source file for reading
     FILE *src = fopen(argv[1], "r");
-    if(src == NULL) {
-        perror("Error opening source file");
+    if (src == NULL) {
+        perror("Cannot open source file");
         return 1;
     }
 
     // Open the target file for writing
     FILE *dest = fopen(argv[2], "w");
-    if(dest == NULL) {
-        perror("Error opening target file");
+    if (dest == NULL) {
+        perror("Cannot open destination file");
         fclose(src); // Close the source file before exiting
         return 1;
     }
@@ -26,7 +26,7 @@ int main(int argc, char *argv[]) {
     // Copy contents from source to target
     char buffer[1024]; // A buffer to hold file contents temporarily
     size_t bytesRead;
-    while((bytesRead = fread(buffer, 1, sizeof(buffer), src)) > 0) {
+    while ((bytesRead = fread(buffer, 1, sizeof(buffer), src)) > 0) {
         fwrite(buffer, 1, bytesRead, dest);
     }
 
@@ -34,7 +34,7 @@ int main(int argc, char *argv[]) {
     fclose(src);
     fclose(dest);
 
-    printf("File copy was successful.\n");
+    printf("The contents of file %s have been successfully copied into the %s file.\n", argv[1], argv[2]);
 
     return 0; // Return zero to indicate success
 }
