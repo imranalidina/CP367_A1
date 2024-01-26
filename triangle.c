@@ -1,37 +1,27 @@
 #include <stdio.h>
 
-// Function to print spaces
 void printSpaces(int count) {
     for(int i = 0; i < count; i++) {
         printf(" ");
     }
 }
 
-// Function to calculate factorial - used for calculating Pascal's triangle values
-int factorial(int num) {
-    int fact = 1;
-    for (int i = 2; i <= num; i++) {
-        fact *= i;
-    }
-    return fact;
-}
-
-// Function to calculate the binomial coefficient
-int binomialCoeff(int n, int k) {
-    return factorial(n) / (factorial(k) * factorial(n - k));
-}
-
-// Function to print `n` rows of Pascal's triangle
 void printPascal(int n) {
+    int arr[n][n];
+
+    // Initialize the first column
     for (int line = 0; line < n; line++) {
+        arr[line][0] = 1;
         // Print leading spaces
         printSpaces(n - line);
-        
-        // Print the numbers
         for (int i = 0; i <= line; i++) {
-            printf("%d ", binomialCoeff(line, i));
+            // First and last values in every row are 1
+            if (line == i || i == 0)
+                arr[line][i] = 1;
+            else // Other values are sum of values just above and left of above
+                arr[line][i] = arr[line - 1][i - 1] + arr[line - 1][i];
+            printf("%d ", arr[line][i]);
         }
-        
         printf("\n");
     }
 }
@@ -46,6 +36,3 @@ int main() {
     printPascal(n);
     return 0;
 }
-
-
-
