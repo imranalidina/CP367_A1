@@ -1,50 +1,42 @@
 #include <stdio.h>
 
-void printSpaces(int n) {
-    for(int i = 0; i < n; i++) {
-        printf(" ");
+// Function to calculate the value of binomial coefficients
+int binomialCoeff(int n, int k) {
+    if (k > n - k) k = n - k;
+    int res = 1;
+    for (int i = 0; i < k; ++i) {
+        res *= (n - i);
+        res /= (i + 1);
     }
+    return res;
 }
 
-void printPascal(int n) {
-    int arr[n][n]; // Create a 2D array to store the values of Pascal's triangle
+// Function to print spaces
+void printSpaces(int count) {
+    for (int i = 0; i < count; i++)
+        printf(" ");
+}
 
-    // Initialize the first column and diagonal values to 1
-    for(int line = 0; line < n; line++) {
-        arr[line][0] = 1;
-        arr[line][line] = 1;
+// Function to print a single line of Pascal's triangle
+void printLine(int n, int maxWidth) {
+    int numSpaces = (maxWidth - n) / 2; // Center the numbers
+    printSpaces(numSpaces);
+    for (int i = 0; i <= n; i++) {
+        printf("%d ", binomialCoeff(n, i));
     }
-
-    // Calculate the other values using the sum of the two values above it
-    for(int line = 2; line < n; line++) {
-        for(int i = 1; i < line; i++) {
-            arr[line][i] = arr[line-1][i-1] + arr[line-1][i];
-        }
-    }
-
-    // Print the triangle
-    for(int line = 0; line < n; line++) {
-        printSpaces(n - line - 1); // Print leading spaces
-        for(int i = 0; i <= line; i++) {
-            printf("%d ", arr[line][i]);
-        }
-        printf("\n");
-    }
+    printf("\n");
 }
 
 int main() {
     int n;
-
-    printf("Please enter a value for the Pascal triangle\n");
-    if(scanf("%d", &n) != 1) {
+    printf("Enter the number of rows for Pascal's triangle (max 15): ");
+    if (scanf("%d", &n) != 1 || n < 1 || n > 15) {
         printf("Invalid input. Please enter a positive integer less than 15.\n");
         return 1;
     }
-    if(n <= 0 || n > 15) {
-        printf("Invalid input. Please enter a positive integer less than 15.\n");
-        return 1;
+    int maxWidth = 3 * (n - 1); // Approximate width of the last line
+    for (int line = 0; line < n; line++) {
+        printLine(line, maxWidth);
     }
-
-    printPascal(n);
     return 0;
 }
